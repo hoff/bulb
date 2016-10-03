@@ -7,7 +7,8 @@ This projects demonstrates
  - how to change their color by user input
  - how to change them programatically (a rainbox animation)
 
-screenshot and photo goes here (gif)
+It looks like this:
+![angular bulb screenshot](assets/screenshot.png "a screenshot of the app")
 
 The project was generated with [angular-cli](https://github.com/angular/angular-cli) version 1.0.0-beta.15.
 
