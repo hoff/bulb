@@ -1,20 +1,22 @@
 <h1>
   Angular Bulbs
 </h1>
-<button (click)="connect()">connect</button>
+<button (click)="connect()"><i class="fa fa-bluetooth-b" aria-hidden="true"> </i> Connect Device</button>
 
-<button (click)="disconnectAll()">disconnect all!</button>
+<button (click)="fakeConnect()"><i class="fa fa-lightbulb-o" aria-hidden="true"></i> Fake Connect</button>
 
-<button (click)="debug = !debug">toggle debug</button>
+<button (click)="disconnectAll()" *ngIf="devices.length > 0"><i class="fa fa-power-off" aria-hidden="true"></i> Disconnect All</button>
+
+<button (click)="debug = !debug"><i class="fa fa-bug" aria-hidden="true"></i> Toggle Debug</button>
 
 <button *ngIf="debug" (click)="resetErrors()">reset errors</button>
 
-<button (click)="fakeConnect()">fake connect</button>
+
 
 <div [style.display]="'flex'">
 
   <!-- each device -->
-  <div *ngFor="let device of devices; let i = index" 
+  <div *ngFor="let device of devices" 
     [style.display]="'flex'"
     [style.flex-direction]="'column'"
     [style.align-items]="'center'"
@@ -47,21 +49,21 @@
       [style.top.px]="-40"
       >
       {{ device.name }}<br>
-      hex: {{ device.hex }}<br>
-      dhex: {{ device.displayHex }} 
-      {{ (device.writeErrorCount / device.writeAttemptCount) * 100 }} %
-      <button (click)="disconnect(device, i)">disconnect</button>
-
       <div *ngIf="debug">
+        hue: {{ device.hue * 100 | round }} % <br>
+        sat: {{ device.sat * 100 | round }} % <br>
+        light: {{ device.light * 100 | round }} %<br>
+        hex: {{ device.hex }}<br>
+        display: {{ device.displayHex }} 
+        errors: {{ ((device.writeErrorCount / device.writeAttemptCount) * 100) | round }} %
         <br>
-       
+        <!-- busy -->
+        <span *ngIf="device.busy"> <i class="fa fa-hourglass-half" aria-hidden="true"></i> </span>
+        <span *ngIf="!device.busy"> <i class="fa fa-check" aria-hidden="true"></i> </span>
         <br>
-        {{ device.name }}<br>
-        hue: {{ device.hue }} <br>
-        sat: {{ device.sat }} <br>
-        light: {{ device.light }}<br>
-        <span (click)="device.busy = !device.busy"> busy (click to toggle)? {{ device.busy }}</span><br>
       </div>
+      <button (click)="disconnectDevice(device)">disconnect</button>
+      
     
     </div>
 
@@ -69,26 +71,28 @@
 
 </div><!-- end of device row -->
 
-<h2>Rainbow Maker</h2>
-<button (click)="rainbowSetup()" *ngIf="!rainbowRunning">apply colors</button>
-<button (click)="startRainbow()" *ngIf="!rainbowRunning">Start RAINBOW!</button>
-<button (click)="stopRainbow()" *ngIf="rainbowRunning">STOP RAINBOW</button>
-<br>
+<!-- RAINBOW PROGRAM -->
+<div *ngIf="devices.length > 0">
 
-interval ms: {{ intervalMS }} <br>
-<input type="range" min="10" max="200" [(ngModel)]="intervalMS"/>
-<br>
-hue change step: {{ hueChangeStep }}<br>
-<input type="range" min="0" max="1" step="0.01" [(ngModel)]="hueChangeStep" (ngModelChange)="rainbowSetup()" />
-<br>
-<br>
-saturation: {{ defaultSaturation }}<br>
-<input type="range" min="0" max="1" step="0.01" [(ngModel)]="defaultSaturation" (ngModelChange)="rainbowSetup()" />
-<br>
-lightness: {{ defaultLightness }}<br>
-<input type="range" min="0" max="1" step="0.01" [(ngModel)]="defaultLightness" (ngModelChange)="rainbowSetup()" />
+  <h2>Rainbow Maker</h2>
+  <button (click)="rainbowSetup()" *ngIf="!rainbowRunning"><i class="fa fa-paint-brush" aria-hidden="true"></i> apply colors</button>
+  <button (click)="startRainbow()" *ngIf="!rainbowRunning"><i class="fa fa-play" aria-hidden="true"></i> Start RAINBOW!</button>
+  <button (click)="stopRainbow()" *ngIf="rainbowRunning"><i class="fa fa-stop" aria-hidden="true"></i> STOP RAINBOW</button>
+  <br>
 
-<br>
-<br>
-hue Distance:  {{ hueDistance }}<br>
-<input type="range" min="0" max="0.4" step="0.02" [(ngModel)]="hueDistance" (ngModelChange)="rainbowSetup()"/>
+  speed of change: {{ intervalMS }} <br>
+  <input type="range" min="10" max="200" [(ngModel)]="intervalMS"/>
+  <br>
+  hue change each step: {{ hueChangeStep * 100| round  }}%<br>
+  <input type="range" min="0" max="1" step="0.01" [(ngModel)]="hueChangeStep" (ngModelChange)="rainbowSetup()" />
+  <br>
+  <br>
+  saturation: {{ defaultSaturation * 100 | round }}%<br>
+  <input type="range" min="0" max="1" step="0.01" [(ngModel)]="defaultSaturation" (ngModelChange)="rainbowSetup()" />
+  <br>
+  lightness: {{ defaultLightness * 100 | round }}%<br>
+  <input type="range" min="0" max="1" step="0.01" [(ngModel)]="defaultLightness" (ngModelChange)="rainbowSetup()" />
+  <br>
+  hue Distance:  {{ hueDistance * 100 | round }}%<br>
+  <input type="range" min="0" max="0.4" step="0.02" [(ngModel)]="hueDistance" (ngModelChange)="rainbowSetup()"/>
+</div>

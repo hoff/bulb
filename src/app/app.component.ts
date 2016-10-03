@@ -1,5 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef, } from '@angular/core'
 
+
 interface navigator {
   bluetooth: {
     requestDevice({}): any
@@ -98,42 +99,48 @@ export class AppComponent implements OnInit {
 
   fakeConnect(count) {
 
-    let fakeDevice = 
-      {
-        device: {},
-        characteristic: {
-          writeValue: () => {
-            return Promise.resolve()
-          }
-        },
-        name: 'dummy',
-        busy: false,
-        writeAttemptCount: 0,
-        writeSuccessCount: 0,
-        writeErrorCount: 0,
-      }
-    this.setRGB(fakeDevice, 0,255,0)
+    let fakeDevice = {
+      device: {
+        gatt: {
+          disconnect: () => { return }
+        }
+      },
+      characteristic: {
+        writeValue: () => {
+          return Promise.resolve()
+        }
+      },
+      name: 'dummy',
+      busy: false,
+      writeAttemptCount: 0,
+      writeSuccessCount: 0,
+      writeErrorCount: 0,
+    }
+    this.setRGB(fakeDevice, 0, 255, 0)
     this.devices.push(fakeDevice)
   }
 
-  /* Disconnects a single device */
-  disconnect(device, i) {
-    // TODO: not dry, repeated in disconnect all
+   
+
+  /**
+   * Disconnects a single device and turns it red
+   */
+  disconnectDevice(device):void {
     this.setRGB(device, 255, 0, 0, () => {
       device.device.gatt.disconnect()
-      this.devices.splice(i)
+      let index = this.devices.indexOf(device)
+      this.devices.splice(index, 1)
+      // not sure why I have to do this, but otherwise the view might not reflect the empty array of devices
+      this.changeDetector.detectChanges()
     })
   }
 
   /**
-   * Disconnects all devices and sets their color to red
+   * Disconnects all devices
    */
-  disconnectAll() {
-    this.devices.forEach((device, i) => {
-      this.setRGB(device, 255, 0, 0, () => {
-        device.device.gatt.disconnect()
-        this.devices.splice(i)
-      })
+  disconnectAll():void {
+    this.devices.forEach((device) => {
+      this.disconnectDevice(device)
     })
   }
 
@@ -141,7 +148,7 @@ export class AppComponent implements OnInit {
    * Event listeren: 
    * Sets a bulb's color according to user input.
    */
-  setColor(device, $event) {
+  setColor(device, $event):void {
     let hex = $event.target.value
     let rgb = this.hexToRgb(hex)
     this.setRGB(device, rgb.r, rgb.g, rgb.b)
@@ -178,9 +185,8 @@ export class AppComponent implements OnInit {
         device.busy = false
         this.changeDetector.detectChanges()
 
-        // callback
+        // benice, call back
         if (callback) {
-          console.log('callback', callback)
           callback()
         }
       })
