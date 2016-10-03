@@ -8,7 +8,7 @@ This projects demonstrates
  - how to change them programatically (a rainbox animation)
 
 It looks like this:
-![angular bulb screenshot](assets/screenshot.png "a screenshot of the app")
+![angular bulb screenshot](https://hoff.github.io/bulb/assets/screenshot.png "a screenshot of the app")
 
 The project was generated with [angular-cli](https://github.com/angular/angular-cli) version 1.0.0-beta.15.
 
