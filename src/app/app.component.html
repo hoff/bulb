@@ -1,3 +1,93 @@
 <h1>
-  {{title}}
+  Angular Bulbs
 </h1>
+<button (click)="connect()">connect</button>
+
+<button (click)="disconnectAll()">disconnect all!</button>
+
+<button (click)="debug = !debug">toggle debug</button>
+
+<button *ngIf="debug" (click)="resetErrors()">reset errors</button>
+
+
+<div [style.display]="'flex'">
+
+  <!-- each device -->
+  <div *ngFor="let device of devices; let i = index" 
+    [style.display]="'flex'"
+    [style.flex-direction]="'column'"
+    [style.align-items]="'center'"
+  >
+
+    <!-- bulb top-->
+    <div 
+      [style.background-color]="device.displayHex"
+      [style.width.px]="200"
+      [style.height.px]="200"
+      [style.border-radius.%]="50"
+      [style.margin.px]="30"
+    >
+      <input 
+        type="color" 
+        (change)="setColor(device, $event)" 
+        [(ngModel)]="device.hex"
+        [style.width.px]="200"
+        [style.height.px]="200"
+        [style.opacity]="0"
+        />
+    </div>
+
+    <!-- bulb socket -->
+    <div 
+      [style.background-color]="'#000'"
+      [style.width.px]="120"
+      [style.padding.px]="10"
+      [style.position]="'relative'"
+      [style.top.px]="-40"
+      >
+      {{ device.name }}<br>
+      hex: {{ device.hex }}<br>
+      dhex: {{ device.displayHex }} 
+      {{ (device.writeErrorCount / device.writeAttemptCount) * 100 }} %
+      <button (click)="disconnect(device, i)">disconnect</button>
+
+      <div *ngIf="debug">
+        <br>
+       
+        <br>
+        {{ device.name }}<br>
+        hue: {{ device.hue }} <br>
+        sat: {{ device.sat }} <br>
+        light: {{ device.light }}<br>
+        <span (click)="device.busy = !device.busy"> busy (click to toggle)? {{ device.busy }}</span><br>
+      </div>
+    
+    </div>
+
+  </div><!-- end of bulb -->
+
+</div><!-- end of device row -->
+
+<h2>Rainbow Maker</h2>
+<button (click)="rainbowSetup()" *ngIf="!rainbowRunning">apply colors</button>
+<button (click)="startRainbow()" *ngIf="!rainbowRunning">Start RAINBOW!</button>
+<button (click)="stopRainbow()" *ngIf="rainbowRunning">STOP RAINBOW</button>
+<br>
+
+interval ms: {{ intervalMS }} <br>
+<input type="range" min="10" max="200" [(ngModel)]="intervalMS"/>
+<br>
+hue change step: {{ hueChangeStep }}<br>
+<input type="range" min="0" max="1" step="0.01" [(ngModel)]="hueChangeStep" (ngModelChange)="rainbowSetup()" />
+<br>
+<br>
+saturation: {{ defaultSaturation }}<br>
+<input type="range" min="0" max="1" step="0.01" [(ngModel)]="defaultSaturation" (ngModelChange)="rainbowSetup()" />
+<br>
+lightness: {{ defaultLightness }}<br>
+<input type="range" min="0" max="1" step="0.01" [(ngModel)]="defaultLightness" (ngModelChange)="rainbowSetup()" />
+
+<br>
+<br>
+hue Distance:  {{ hueDistance }}<br>
+<input type="range" min="0" max="0.4" step="0.02" [(ngModel)]="hueDistance" (ngModelChange)="rainbowSetup()"/>
