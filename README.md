@@ -1,6 +1,15 @@
-# Bulb
+# Angular Bulbs
 
-This project was generated with [angular-cli](https://github.com/angular/angular-cli) version 1.0.0-beta.15.
+Angular Bulbs is a simple Angular 2 app that let's you control bluetooth enabled light bulbs. It was inspired by an Internet of Things (IoT) workshop I attended at Angular Connect 2016 in London.
+
+This projects demonstrates 
+ - how to connect to 1 or more devices
+ - how to change their color by user input
+ - how to change them programatically (a rainbox animation)
+
+screenshot and photo goes here (gif)
+
+The project was generated with [angular-cli](https://github.com/angular/angular-cli) version 1.0.0-beta.15.
 
 ## Development server
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.

@@ -96,6 +96,26 @@ export class AppComponent implements OnInit {
     })
   }
 
+  fakeConnect(count) {
+
+    let fakeDevice = 
+      {
+        device: {},
+        characteristic: {
+          writeValue: () => {
+            return Promise.resolve()
+          }
+        },
+        name: 'dummy',
+        busy: false,
+        writeAttemptCount: 0,
+        writeSuccessCount: 0,
+        writeErrorCount: 0,
+      }
+    this.setRGB(fakeDevice, 0,255,0)
+    this.devices.push(fakeDevice)
+  }
+
   /* Disconnects a single device */
   disconnect(device, i) {
     // TODO: not dry, repeated in disconnect all
@@ -130,8 +150,9 @@ export class AppComponent implements OnInit {
   /**
    * Changes to color of a given device, to given r, b, and b values.
    * Records updated color information on the device object.
+   * 
    */
-  setRGB(device, red: number, green: number, blue: number, callback?: Function) {
+  setRGB(device, red: number, green: number, blue: number, callback?: Function): void {
     let color = new Uint8Array([0x56, red, green, blue, 0x00, 0xf0, 0xaa])
     if (device.busy) {
       // record error
@@ -149,7 +170,7 @@ export class AppComponent implements OnInit {
         // record hex
         device.hex = this.rgbToHex(red, green, blue)
         // record display hex (lighter) :)
-        let howFarFarFromOnePercent = (1- device.light) *100
+        let howFarFarFromOnePercent = (1 - device.light) * 100
         let adjustPercent = howFarFarFromOnePercent // should end at 90
         // find a better way of lightening the color...
         device.displayHex = this.lightenDarkenColor(device.hex, 110)
@@ -171,7 +192,7 @@ export class AppComponent implements OnInit {
    * Called at interval: Increases the hue value for each device 
    * according to hueChangeStep setting.
    */
-  rainbowStep() {
+  rainbowStep(): void {
     this.devices.forEach((device) => {
       let newHue = (device.hue += +this.hueChangeStep) % 1
       let newRGB = this.hslToRgb(newHue, +this.defaultSaturation, +this.defaultLightness)
@@ -182,7 +203,7 @@ export class AppComponent implements OnInit {
   /**
    * Starts the rainbow animation
    */
-  startRainbow() {
+  startRainbow(): void {
     this.rainbowRunning = true
     this.runRainbow()
   }
@@ -190,7 +211,7 @@ export class AppComponent implements OnInit {
   /**
    * Recursive loop to rainbow animate the bulbs.
    */
-  runRainbow() {
+  runRainbow(): void {
     if (!this.rainbowRunning) { return }
     this.rainbowStep()
     setTimeout(() => this.runRainbow(), this.intervalMS)
@@ -199,7 +220,7 @@ export class AppComponent implements OnInit {
   /**
    * Stops the rainbox animation
    */
-  stopRainbow() {
+  stopRainbow(): void {
     this.rainbowRunning = false
   }
 
@@ -208,7 +229,7 @@ export class AppComponent implements OnInit {
    * as specified in the hueDistance setting,
    * and lightness/saturation by their global settings
    */
-  rainbowSetup() {
+  rainbowSetup(): void {
     let currentHue = 0
     this.devices.forEach((device) => {
       let rgb = this.hslToRgb(currentHue, +this.defaultSaturation, +this.defaultLightness)
@@ -234,7 +255,7 @@ export class AppComponent implements OnInit {
 
   // COLOR UTILITY FUNCTIONS
 
-  lightenDarkenColor (col, amt) {
+  lightenDarkenColor(col, amt) {
 
     var usePound = false;
 
