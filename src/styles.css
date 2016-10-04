@@ -32,3 +32,18 @@ button {
     -moz-appearance:    none;
     appearance:         none;
 }
+
+button:hover {
+    transition: all 60ms ease;
+    opacity: .85;
+}
+  
+button:active {
+    transition: all 60ms ease;
+    opacity: .75;
+}
+  
+button:focus {
+    outline: 1px dotted #959595;
+    outline-offset: -4px;
+}

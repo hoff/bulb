@@ -7,9 +7,9 @@
 
 <button (click)="disconnectAll()" *ngIf="devices.length > 0"><i class="fa fa-power-off" aria-hidden="true"></i> Disconnect All</button>
 
-<button (click)="debug = !debug"><i class="fa fa-bug" aria-hidden="true"></i> Toggle Debug</button>
+<button *ngIf="devices.length > 0" (click)="debug = !debug"><i class="fa fa-bug" aria-hidden="true"></i> Toggle Debug</button>
 
-<button *ngIf="debug" (click)="resetErrors()">reset errors</button>
+<button *ngIf="debug" (click)="resetErrors()"><i class="fa fa-refresh" aria-hidden="true"></i> reset errors</button>
 
 
 
@@ -57,18 +57,14 @@
         display: {{ device.displayHex }} 
         errors: {{ ((device.writeErrorCount / device.writeAttemptCount) * 100) | round }} %
         <br>
-        <!-- busy -->
+        <!-- busy indicator -->
         <span *ngIf="device.busy"> <i class="fa fa-hourglass-half" aria-hidden="true"></i> </span>
-        <span *ngIf="!device.busy"> <i class="fa fa-check" aria-hidden="true"></i> </span>
+        <span *ngIf="!device.busy">&nbsp;</span>
         <br>
       </div>
       <button (click)="disconnectDevice(device)">disconnect</button>
-      
-    
     </div>
-
   </div><!-- end of bulb -->
-
 </div><!-- end of device row -->
 
 <!-- RAINBOW PROGRAM -->
